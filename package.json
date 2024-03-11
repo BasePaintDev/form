@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "db:format": "prisma format",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
@@ -24,6 +25,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.7",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^20",
     "@types/react": "^18",
@@ -42,6 +44,8 @@
     "typescript": "^5"
   },
   "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+    "schema": "db/schema.prisma",
+    "env": ".env.local",
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} db/seed.ts"
   }
 }

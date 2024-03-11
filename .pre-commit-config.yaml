@@ -5,5 +5,39 @@ repos:
       - id: check-json
       - id: check-yaml
       - id: end-of-file-fixer
+      - id: trailing-whitespace
       - id: no-commit-to-branch
         args: ["--branch", "main"]
+  - repo: local
+    hooks:
+      - id: db:format
+        name: Format Database
+        entry: npm run db:format
+        language: system
+        pass_filenames: false
+        files: db/schema.prisma
+        description: Format the schema.prisma file
+      - id: next-lint
+        name: Run Next Lint
+        entry: npm run lint
+        language: system
+        pass_filenames: false
+      - id: db:push
+        name: Push Database
+        entry: npm run db:push
+        language: system
+        pass_filenames: false
+        files: db/schema.prisma
+        description: Push the schema to the local db
+      - id: db:seed
+        name: Seed Database
+        entry: npm run db:seed
+        language: system
+        pass_filenames: false
+        files: db/seed.ts
+        description: Seed the database with test data
+      - id: next-build
+        name: Run Next Build
+        entry: npm run build
+        language: system
+        pass_filenames: false

@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  email    String @unique
+  name     String
+  password String
+}
+
+model Form {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  title     String
+  fields    Field[]
+}
+
+model Field {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  label     String
+  type      String
+  formId    String
+  form      Form     @relation(fields: [formId], references: [id])
+}
+
+// model AuditLog {
+//   id        String   @id @default(uuid())
+//   createdAt DateTime @default(now())
+//   userId    String
+//   user      User     @relation(fields: [userId], references: [id])
+//   formId    String?
+//   form      Form?    @relation(fields: [formId], references: [id])
+//   fieldId   String?
+//   field     Field?   @relation(fields: [fieldId], references: [id])
+//   action    String
+// }
