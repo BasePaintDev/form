@@ -10,7 +10,7 @@ This project is a starter project that provides a pre-configured setup for build
 - Submission Tracking: The project provides functionality to track form submissions, allowing users to view and analyze the data collected through the forms.
 - Dev Container: The project comes with a pre-configured development container that sets up an app container for Next.js and Prisma, as well as a separate PostgreSQL database container. This containerized setup ensures consistency and ease of development across different environments.
 - Precommit Hooks: The project includes precommit hooks that protect the main branch and enforce code quality standards. These hooks automatically remove whitespace and perform other checks to ensure clean and consistent code.
-- Next.js App Router: The project utilizes the Next.js App Router for handling client-side routing and navigation within the application.
+- Next.js App Router: The project utilizes the Next.js App Router for handling routing and navigation within the application.
 - Server Actions: The project uses server actions with Prisma to communicate with the PostgreSQL database. This allows for efficient and secure data retrieval, modification, and deletion.
 
 ## Getting Started
