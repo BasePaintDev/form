@@ -8,10 +8,12 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(uuid())
-  email    String @unique
-  name     String
-  password String
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  email     String   @unique
+  name      String
+  password  String
 }
 
 model Form {
@@ -31,15 +33,3 @@ model Field {
   formId    String
   form      Form     @relation(fields: [formId], references: [id])
 }
-
-// model AuditLog {
-//   id        String   @id @default(uuid())
-//   createdAt DateTime @default(now())
-//   userId    String
-//   user      User     @relation(fields: [userId], references: [id])
-//   formId    String?
-//   form      Form?    @relation(fields: [formId], references: [id])
-//   fieldId   String?
-//   field     Field?   @relation(fields: [fieldId], references: [id])
-//   action    String
-// }
