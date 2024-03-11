@@ -19,7 +19,7 @@ To get started with this project, follow these steps:
 
 1. Clone the repository to your local machine.
 2. Install the required dependencies by running `npm install`.
-3. Set up the necessary environment variables for authentication and database configuration.
+3. Set up the necessary environment variables for authentication and database configuration. See `.env.example`.
 4. Run the development server using the command `npm run dev`.
 5. Access the application in your browser at [http://localhost:3000](http://localhost:3000).
 6. Run the prisma studio using the command `npm run db:studio`.
