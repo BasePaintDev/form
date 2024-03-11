@@ -23,7 +23,7 @@ To get started with this project, follow these steps:
 4. Run the development server using the command `npm run dev`.
 5. Access the application in your browser at [http://localhost:3000](http://localhost:3000).
 6. Run the prisma studio using the command `npm run db:studio`.
-7. Access the prisma studio in your browser at [http://localhost:5432](http://localhost:5432).
+7. Access the prisma studio in your browser at [http://localhost:5555](http://localhost:5555).
 
 ## Available Commands
 
