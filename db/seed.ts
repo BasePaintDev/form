@@ -1,18 +1,18 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
-import bcrypt from "bcrypt";
+import bcrypt from 'bcrypt';
 
 async function main() {
   const users = [
     {
-      name: "User",
-      email: "user@nextmail.com",
-      password: "123456",
+      name: 'User',
+      email: 'user@nextmail.com',
+      password: '123456',
     },
     {
-      name: "Admin",
-      email: "admin@testmail.com",
-      password: "654321",
+      name: 'Admin',
+      email: 'admin@testmail.com',
+      password: '654321',
     },
   ];
 
@@ -28,7 +28,6 @@ async function main() {
         password: hashedPassword,
       },
     });
-    console.log(response);
   });
 }
 
