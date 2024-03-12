@@ -8,7 +8,7 @@ export default function status({ status }: { status: string }) {
         'inline-flex items-center rounded-full px-2 py-1 text-xs',
         {
           'bg-gray-100 text-gray-500': status === 'pending',
-          'bg-green-500 text-white': status === 'paid',
+          'bg-green-500 text-white': status === 'published',
         },
       )}
     >
@@ -21,7 +21,7 @@ export default function status({ status }: { status: string }) {
       {status === 'published' ? (
         <>
           Published
-          <CheckIcon className="ml-1 w-4 text-black" />
+          <CheckIcon className="ml-1 w-4 text-white" />
         </>
       ) : null}
     </span>
