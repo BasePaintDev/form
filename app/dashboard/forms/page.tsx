@@ -5,6 +5,7 @@ import { lusitana } from '@/app/ui/fonts';
 import { FormTableSkeleton } from '@/app/ui/skeletons';
 import { CreateForm } from '@/app/ui/forms/buttons';
 import Search from '@/app/ui/search';
+import { fetchForms } from '@/app/lib/data';
 
 export const metadata: Metadata = {
   title: 'Forms',
@@ -20,6 +21,7 @@ export default async function Page({
 }) {
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
+  const forms = await fetchForms();
 
   return (
     <div className="w-full">
@@ -33,9 +35,11 @@ export default async function Page({
       </div>
 
       {/* Form Table */}
-      <Suspense fallback={<FormTableSkeleton />}>
-        <Table query={query} currentPage={currentPage} />
-      </Suspense>
+      {forms.map((form) => (
+        <Suspense key={form.id} fallback={<FormTableSkeleton />}>
+          <Table versions={form.versions} title={form.title} formId={form.id} />
+        </Suspense>
+      ))}
 
       {/* Pagination */}
       {/* <div className="mt-5 flex w-full justify-center">

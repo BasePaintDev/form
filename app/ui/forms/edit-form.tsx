@@ -10,9 +10,13 @@ import { Button } from '@/app/ui/button';
 import { updateForm } from '@/app/lib/actions';
 import { useFormState } from 'react-dom';
 import { redirect } from 'next/navigation';
-import type { Form } from '@prisma/client';
+import type { Form, FormVersion } from '@prisma/client';
 
-export default function Form({ form }: { form: Form }) {
+type Draft = {
+  form: Form;
+} & FormVersion;
+
+export default function Form({ draft }: { draft: Draft }) {
   const initialState = { message: null, errors: {} };
   const [state, dispatch] = useFormState(updateForm, initialState);
   if (state?.message == 'Form updated successfully')
@@ -25,10 +29,27 @@ export default function Form({ form }: { form: Form }) {
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
-                id="id"
-                name="id"
+                id="formId"
+                name="formId"
                 type="text"
-                value={form.id}
+                value={draft.form.id}
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-2 text-sm outline-2 placeholder:text-gray-500"
+                required
+                readOnly
+                aria-disabled
+              />
+            </div>
+          </div>
+        </div>
+        {/* Form Id */}
+        <div className="mb-4 hidden">
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id="formVersionId"
+                name="formVersionId"
+                type="text"
+                value={draft.id}
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-2 text-sm outline-2 placeholder:text-gray-500"
                 required
                 readOnly
@@ -48,92 +69,13 @@ export default function Form({ form }: { form: Form }) {
                 id="title"
                 name="title"
                 type="text"
-                defaultValue={form.title}
+                defaultValue={draft.form.title}
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-2 text-sm outline-2 placeholder:text-gray-500"
                 required
               />
             </div>
           </div>
         </div>
-        {/* Form Status */}
-        <fieldset>
-          <legend className="mb-2 block text-sm font-medium">
-            Set the form status
-          </legend>
-          <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3">
-            <div className="flex gap-4">
-              <div className="flex items-center">
-                <input
-                  id="draft"
-                  name="status"
-                  type="radio"
-                  value="draft"
-                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
-                  defaultChecked={form.status === 'draft'}
-                  required
-                />
-                <label
-                  htmlFor="draft"
-                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-500 px-3 py-1.5 text-xs font-medium text-gray-100"
-                >
-                  Draft <DocumentIcon className="h-4 w-4" />
-                </label>
-              </div>
-              <div className="flex items-center">
-                <input
-                  id="pending"
-                  name="status"
-                  type="radio"
-                  value="pending"
-                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
-                  defaultChecked={form.status === 'pending'}
-                  required
-                />
-                <label
-                  htmlFor="pending"
-                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-red-500 px-3 py-1.5 text-xs font-medium text-gray-100"
-                >
-                  Pending <ClockIcon className="h-4 w-4" />
-                </label>
-              </div>
-
-              <div className="flex items-center">
-                <input
-                  id="published"
-                  name="status"
-                  type="radio"
-                  value="published"
-                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
-                  defaultChecked={form.status === 'published'}
-                  required
-                />
-                <label
-                  htmlFor="published"
-                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-green-500 px-3 py-1.5 text-xs font-medium text-white"
-                >
-                  Published <CheckIcon className="h-4 w-4" />
-                </label>
-              </div>
-              <div className="flex items-center">
-                <input
-                  id="archived"
-                  name="status"
-                  type="radio"
-                  value="archived"
-                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
-                  defaultChecked={form.status === 'archived'}
-                  required
-                />
-                <label
-                  htmlFor="archived"
-                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-black px-3 py-1.5 text-xs font-medium text-white"
-                >
-                  Archived <ArchiveBoxIcon className="h-4 w-4" />
-                </label>
-              </div>
-            </div>
-          </div>
-        </fieldset>
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link

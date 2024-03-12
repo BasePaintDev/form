@@ -1,12 +1,12 @@
 import Breadcrumbs from '@/app/ui/forms/breadcrumbs';
 import Form from '@/app/ui/forms/edit-form';
-import { fetchFormById } from '@/app/lib/data';
+import { fetchEditFormById } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
-  const [form] = await Promise.all([fetchFormById(id), []]);
-  if (!form) notFound();
+  const [draft] = await Promise.all([fetchEditFormById(id), []]);
+  if (!draft) notFound();
   return (
     <main>
       <Breadcrumbs
@@ -19,7 +19,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           },
         ]}
       />
-      <Form form={form} />
+      <Form draft={draft} />
     </main>
   );
 }

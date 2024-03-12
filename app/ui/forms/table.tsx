@@ -1,49 +1,57 @@
-import { UpdateForm, DeleteForm } from '@/app/ui/forms/buttons';
 import FormStatus from '@/app/ui/forms/status';
 import { formatDateToLocal } from '@/app/lib/utils';
-import { fetchForms } from '@/app/lib/data';
 import { ClipboardDocumentListIcon } from '@heroicons/react/24/outline';
+import type { Form, FormVersion } from '@prisma/client';
+import {
+  EditForm,
+  DeleteForm,
+  ProposeFormVersion,
+  DeleteFormVersion,
+  ApproveFormVersion,
+  DeclineFormVersion,
+  PreviewFormVersion,
+  ViewFormVersion,
+  ArchiveFormVersion,
+  RevertFormVersion,
+} from '@/app/ui/forms/buttons';
 
 export default async function Table({
-  query,
-  currentPage,
+  versions,
+  title,
+  formId,
 }: {
-  query: string;
-  currentPage: number;
+  versions: FormVersion[];
+  title: string;
+  formId: string;
 }) {
-  const forms = await fetchForms();
-
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
-            {forms?.map((form) => (
+            {versions?.map((version) => (
               <div
-                key={form.id}
+                key={version.id}
                 className="mb-2 w-full rounded-md bg-white p-4"
               >
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
                     <div className="mb-2 flex items-center">
                       <ClipboardDocumentListIcon width={28} />
-                      <p>{form.title}</p>
+                      <p>{version.version}</p>
                     </div>
                     <p className="text-sm text-gray-500">
                       Created By: Bob Ross
                     </p>
                   </div>
-                  <FormStatus status={form.status} />
+                  <FormStatus status={version.status} />
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p className="text-xl font-medium">Updated By: Bob Ross</p>
-                    <p>{form.updatedAt.toLocaleDateString()}</p>
+                    <p>{version.updatedAt.toLocaleDateString()}</p>
                   </div>
-                  <div className="flex justify-end gap-2">
-                    <UpdateForm id={form.id} />
-                    <DeleteForm id={form.id} />
-                  </div>
+                  <div className="flex justify-end gap-2"></div>
                 </div>
               </div>
             ))}
@@ -52,7 +60,7 @@ export default async function Table({
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Form
+                  {title}
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Approved By
@@ -67,34 +75,62 @@ export default async function Table({
                   Status
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
-                  <span className="sr-only">Edit</span>
+                  <div className="flex justify-end gap-3">
+                    <EditForm id={formId} />
+                    <DeleteForm id={formId} />
+                  </div>
                 </th>
               </tr>
             </thead>
             <tbody className="bg-white">
-              {forms?.map((form) => (
+              {versions?.map((version) => (
                 <tr
-                  key={form.id}
+                  key={version.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
-                      <ClipboardDocumentListIcon width={28} />
-                      <p>{form.title}</p>
+                      <PreviewFormVersion id={version.id} />
+                      {version.status != 'draft' && (
+                        <ViewFormVersion id={version.id} />
+                      )}{' '}
+                      {version.status == 'draft' && <EditForm id={formId} />}
+                      <p>{version.version}</p>
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">Bob Ross</td>
                   <td className="whitespace-nowrap px-3 py-3">Bob Ross</td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {formatDateToLocal(form.updatedAt)}
+                    {formatDateToLocal(version.updatedAt)}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    <FormStatus status={form.status} />
+                    <FormStatus status={version.status} />
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateForm id={form.id} />
-                      <DeleteForm id={form.id} />
+                      {version.status === 'pending' && (
+                        <>
+                          <ApproveFormVersion form={version} />
+
+                          <DeclineFormVersion form={version} />
+                        </>
+                      )}
+                      {version.status === 'draft' && (
+                        <>
+                          <ProposeFormVersion form={version} />
+                          <DeleteFormVersion id={version.id} />
+                        </>
+                      )}
+                      {version.status === 'published' && (
+                        <>
+                          <ArchiveFormVersion form={version} />
+                        </>
+                      )}
+                      {version.status === 'archived' && (
+                        <>
+                          <RevertFormVersion form={version} />
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>

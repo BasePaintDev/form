@@ -17,20 +17,31 @@ model User {
 }
 
 model Form {
+  id               String        @id @default(uuid())
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  title            String
+  currentVersionId String?
+  versions         FormVersion[]
+}
+
+model FormVersion {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  title     String
-  status    String
+  version   String
+  status    String   @default("draft") // Default to 'draft' for new versions
   fields    Field[]
+  form      Form     @relation(fields: [formId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  formId    String
 }
 
 model Field {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String      @id @default(uuid())
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
   label     String
   type      String
   formId    String
-  form      Form     @relation(fields: [formId], references: [id])
+  form      FormVersion @relation(fields: [formId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }

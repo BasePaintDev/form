@@ -2,6 +2,7 @@
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/db/prisma';
+import type { FormVersion } from '@prisma/client';
 
 export type State = {
   errors?: {
@@ -13,7 +14,8 @@ export type State = {
 };
 
 const FormSchema = z.object({
-  id: z.string(),
+  formId: z.string(),
+  formVersionId: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
   title: z.string(),
@@ -21,9 +23,11 @@ const FormSchema = z.object({
 });
 
 const CreateForm = FormSchema.omit({
-  id: true,
+  formId: true,
+  formVersionId: true,
   createdAt: true,
   updatedAt: true,
+  status: true,
 });
 
 const UpdateForm = FormSchema.omit({
@@ -56,12 +60,11 @@ export async function createForm(prevState: State, formData: FormData) {
     };
     return state;
   }
-  const { title, status } = validatedFormData.data;
+  const { title } = validatedFormData.data;
   try {
     await prisma.form.create({
       data: {
         title: title,
-        status: status,
       },
     });
   } catch (error) {
@@ -84,13 +87,18 @@ export async function updateForm(prevState: State, formData: FormData) {
     };
     return state;
   }
-  const { id, title, status } = validatedFormData.data;
+  const { formId, formVersionId, title, status } = validatedFormData.data;
   try {
     await prisma.form.update({
-      where: { id: id },
+      where: { id: formId },
       data: {
         title: title,
-        status: status,
+        versions: {
+          update: {
+            where: { id: formVersionId },
+            data: { status: status },
+          },
+        },
       },
     });
   } catch (error) {
@@ -109,6 +117,122 @@ export async function deleteForm(id: string) {
     revalidatePath('/dashboard/forms');
     return { message: 'Form deleted' };
   } catch (error) {
+    console.error('Database Error: Failed to delete form', error);
     return { message: 'Database Error: Failed to Delete' };
+  }
+}
+
+export async function deleteFormVersion(id: string) {
+  try {
+    await prisma.formVersion.delete({ where: { id: id } });
+    revalidatePath('/dashboard/forms');
+    return { message: 'Form deleted' };
+  } catch (error) {
+    console.error('Database Error: Failed to delete form', error);
+    return { message: 'Database Error: Failed to Delete' };
+  }
+}
+
+export async function declineFormVersion(form: FormVersion) {
+  try {
+    await prisma.form.update({
+      where: { id: form.formId },
+      data: {
+        versions: {
+          update: {
+            where: { id: form.id },
+            data: { status: 'draft' },
+          },
+        },
+      },
+    });
+    revalidatePath('/dashboard/forms');
+    return { message: 'Form Declined' };
+  } catch (error) {
+    console.error('Database Error: Failed to decline form', error);
+    return { message: 'Database Error: Failed to Decline' };
+  }
+}
+
+export async function approveFormVersion(form: FormVersion) {
+  try {
+    await prisma.form.update({
+      where: { id: form.formId },
+      data: {
+        versions: {
+          update: {
+            where: { id: form.id },
+            data: { status: 'published' },
+          },
+        },
+      },
+    });
+    revalidatePath('/dashboard/forms');
+    return { message: 'Form Approved' };
+  } catch (error) {
+    console.error('Database Error: Failed to approve form', error);
+    return { message: 'Database Error: Failed to Approve' };
+  }
+}
+
+export async function proposeFormVersion(form: FormVersion) {
+  try {
+    await prisma.form.update({
+      where: { id: form.formId },
+      data: {
+        versions: {
+          update: {
+            where: { id: form.id },
+            data: { status: 'pending' },
+          },
+        },
+      },
+    });
+    revalidatePath('/dashboard/forms');
+    return { message: 'Form Proposed' };
+  } catch (error) {
+    console.error('Database Error: Failed to propose form', error);
+    return { message: 'Database Error: Failed to Propose' };
+  }
+}
+
+export async function archiveFormVersion(form: FormVersion) {
+  try {
+    await prisma.form.update({
+      where: { id: form.formId },
+      data: {
+        versions: {
+          update: {
+            where: { id: form.id },
+            data: { status: 'archived' },
+          },
+        },
+      },
+    });
+    revalidatePath('/dashboard/forms');
+    return { message: 'Form Approved' };
+  } catch (error) {
+    console.error('Database Error: Failed to approve form', error);
+    return { message: 'Database Error: Failed to Approve' };
+  }
+}
+export async function revertFormVersion(form: FormVersion) {
+  try {
+    await prisma.form.update({
+      where: { id: form.formId },
+      data: {
+        versions: {
+          update: {
+            where: { id: form.id },
+            data: { status: 'published' },
+          },
+        },
+      },
+    });
+    revalidatePath('/dashboard/forms');
+    return { message: 'Form Reverted' };
+  } catch (error) {
+    console.error('Database Error: Failed to revert form', error);
+    return { message: 'Database Error: Failed to Revert' };
   }
 }
