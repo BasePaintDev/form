@@ -62,7 +62,7 @@ export default async function Table({
                   Updated By
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Date
+                  Updated At
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Status
@@ -87,7 +87,7 @@ export default async function Table({
                   <td className="whitespace-nowrap px-3 py-3">Bob Ross</td>
                   <td className="whitespace-nowrap px-3 py-3">Bob Ross</td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {form.updatedAt.toLocaleDateString()}
+                    {formatDateToLocal(form.updatedAt)}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     <FormStatus status={form.status} />

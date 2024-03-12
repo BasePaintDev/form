@@ -8,17 +8,33 @@ export const formatCurrency = (amount: number) => {
 };
 
 export const formatDateToLocal = (
-  dateStr: string,
+  date: string | Date,
   locale: string = 'en-US',
 ) => {
-  const date = new Date(dateStr);
-  const options: Intl.DateTimeFormatOptions = {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  };
-  const formatter = new Intl.DateTimeFormat(locale, options);
-  return formatter.format(date);
+  if (typeof date === 'string') {
+    const newDate = new Date(date);
+    const options: Intl.DateTimeFormatOptions = {
+      minute: 'numeric',
+      hour: 'numeric',
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      timeZone: 'CST',
+    };
+    const formatter = new Intl.DateTimeFormat(locale, options);
+    return formatter.format(newDate);
+  } else {
+    const options: Intl.DateTimeFormatOptions = {
+      minute: 'numeric',
+      hour: 'numeric',
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      timeZone: 'CST',
+    };
+    const formatter = new Intl.DateTimeFormat(locale, options);
+    return formatter.format(date);
+  }
 };
 
 // export const generateYAxis = (revenue: Revenue[]) => {
