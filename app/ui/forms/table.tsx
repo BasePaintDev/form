@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { UpdateForm, DeleteForm } from '@/app/ui/forms/buttons';
 import FormStatus from '@/app/ui/forms/status';
 import { formatDateToLocal } from '@/app/lib/utils';
