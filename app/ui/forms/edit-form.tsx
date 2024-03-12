@@ -1,6 +1,11 @@
 'use client';
 import Link from 'next/link';
-import { CheckIcon, ClockIcon } from '@heroicons/react/24/outline';
+import {
+  ArchiveBoxIcon,
+  CheckIcon,
+  ClockIcon,
+  DocumentIcon,
+} from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { updateForm } from '@/app/lib/actions';
 import { useFormState } from 'react-dom';
@@ -59,6 +64,23 @@ export default function Form({ form }: { form: Form }) {
             <div className="flex gap-4">
               <div className="flex items-center">
                 <input
+                  id="draft"
+                  name="status"
+                  type="radio"
+                  value="draft"
+                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                  defaultChecked={form.status === 'draft'}
+                  required
+                />
+                <label
+                  htmlFor="draft"
+                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-500 px-3 py-1.5 text-xs font-medium text-gray-100"
+                >
+                  Draft <DocumentIcon className="h-4 w-4" />
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
                   id="pending"
                   name="status"
                   type="radio"
@@ -69,11 +91,12 @@ export default function Form({ form }: { form: Form }) {
                 />
                 <label
                   htmlFor="pending"
-                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
+                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-red-500 px-3 py-1.5 text-xs font-medium text-gray-100"
                 >
                   Pending <ClockIcon className="h-4 w-4" />
                 </label>
               </div>
+
               <div className="flex items-center">
                 <input
                   id="published"
@@ -89,6 +112,23 @@ export default function Form({ form }: { form: Form }) {
                   className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-green-500 px-3 py-1.5 text-xs font-medium text-white"
                 >
                   Published <CheckIcon className="h-4 w-4" />
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  id="archived"
+                  name="status"
+                  type="radio"
+                  value="archived"
+                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                  defaultChecked={form.status === 'archived'}
+                  required
+                />
+                <label
+                  htmlFor="archived"
+                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-black px-3 py-1.5 text-xs font-medium text-white"
+                >
+                  Archived <ArchiveBoxIcon className="h-4 w-4" />
                 </label>
               </div>
             </div>

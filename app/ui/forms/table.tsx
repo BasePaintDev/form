@@ -3,6 +3,7 @@ import { UpdateForm, DeleteForm } from '@/app/ui/forms/buttons';
 import FormStatus from '@/app/ui/forms/status';
 import { formatDateToLocal } from '@/app/lib/utils';
 import { fetchForms } from '@/app/lib/data';
+import { ClipboardDocumentListIcon } from '@heroicons/react/24/outline';
 
 export default async function Table({
   query,
@@ -26,13 +27,7 @@ export default async function Table({
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
                     <div className="mb-2 flex items-center">
-                      <Image
-                        src={'/vercel.svg'}
-                        className="mr-2 rounded-full"
-                        width={28}
-                        height={28}
-                        alt={`${form.title}'s picture`}
-                      />
+                      <ClipboardDocumentListIcon width={28} />
                       <p>{form.title}</p>
                     </div>
                     <p className="text-sm text-gray-500">
@@ -85,13 +80,7 @@ export default async function Table({
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
-                      <Image
-                        src={'/next.svg'}
-                        className="mr-2 rounded-full"
-                        width={28}
-                        height={28}
-                        alt={`${form.title}'s picture`}
-                      />
+                      <ClipboardDocumentListIcon width={28} />
                       <p>{form.title}</p>
                     </div>
                   </td>

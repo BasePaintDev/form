@@ -17,7 +17,7 @@ const FormSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
   title: z.string(),
-  status: z.enum(['pending', 'published']),
+  status: z.enum(['draft', 'pending', 'published', 'archived']),
 });
 
 const CreateForm = FormSchema.omit({
