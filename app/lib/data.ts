@@ -1,4 +1,4 @@
-import { prisma } from '@/db/prisma';
+import prisma from '@/db/prisma';
 import { unstable_noStore as noStore, revalidatePath } from 'next/cache';
 
 export async function fetchForms() {

@@ -1,7 +1,7 @@
 'use server';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
-import { prisma } from '@/db/prisma';
+import prisma from '@/db/prisma';
 import type { FormVersion } from '@prisma/client';
 
 export type State = {
