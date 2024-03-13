@@ -1,22 +1,18 @@
 'use client';
 import Link from 'next/link';
-import {
-  ArchiveBoxIcon,
-  CheckIcon,
-  ClockIcon,
-  DocumentIcon,
-} from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { updateForm } from '@/app/lib/actions';
 import { useFormState } from 'react-dom';
 import { redirect } from 'next/navigation';
 import type { Form, FormVersion } from '@prisma/client';
+import { unstable_noStore } from 'next/cache';
 
 type Draft = {
   form: Form;
 } & FormVersion;
 
 export default function Form({ draft }: { draft: Draft }) {
+  unstable_noStore();
   const initialState = { message: null, errors: {} };
   const [state, dispatch] = useFormState(updateForm, initialState);
   if (state?.message == 'Form updated successfully')

@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import prisma from '@/db/prisma';
 import type { FormVersion } from '@prisma/client';
+import { redirect } from 'next/navigation';
 
 export type State = {
   errors?: {
@@ -33,6 +34,7 @@ const CreateForm = FormSchema.omit({
 const UpdateForm = FormSchema.omit({
   createdAt: true,
   updatedAt: true,
+  status: true,
 });
 
 const FieldSchema = z.object({
@@ -87,7 +89,7 @@ export async function updateForm(prevState: State, formData: FormData) {
     };
     return state;
   }
-  const { formId, formVersionId, title, status } = validatedFormData.data;
+  const { formId, formVersionId, title } = validatedFormData.data;
   try {
     await prisma.form.update({
       where: { id: formId },
@@ -96,7 +98,7 @@ export async function updateForm(prevState: State, formData: FormData) {
         versions: {
           update: {
             where: { id: formVersionId },
-            data: { status: status },
+            data: { status: 'draft' },
           },
         },
       },
@@ -108,7 +110,7 @@ export async function updateForm(prevState: State, formData: FormData) {
     return state;
   }
   revalidatePath('/dashboard/forms');
-  return { message: 'Form updated successfully' };
+  redirect('/dashboard/forms');
 }
 
 export async function deleteForm(id: string) {
@@ -235,4 +237,58 @@ export async function revertFormVersion(form: FormVersion) {
     console.error('Database Error: Failed to revert form', error);
     return { message: 'Database Error: Failed to Revert' };
   }
+}
+
+export async function editForm(id: string) {
+  try {
+    let draft = await prisma.formVersion.findFirst({
+      where: {
+        formId: id,
+        OR: [
+          {
+            status: 'draft',
+          },
+          {
+            status: 'pending',
+          },
+        ],
+      },
+      include: {
+        form: true,
+      },
+    });
+    if (!draft) {
+      draft = await prisma.formVersion.create({
+        data: {
+          version: '0.0.0001',
+          status: 'draft',
+          form: {
+            connect: {
+              id: id,
+            },
+          },
+        },
+        include: {
+          form: true,
+        },
+      });
+    } else if (draft.status === 'pending') {
+      draft = await prisma.formVersion.update({
+        where: {
+          id: draft.id,
+        },
+        data: {
+          status: 'draft',
+        },
+        include: {
+          form: true,
+        },
+      });
+    }
+  } catch (error) {
+    console.error('Database Error: Failed to fetch form');
+    throw new Error('Failed to fetch form data.');
+  }
+  revalidatePath(`/dashboard/forms/${id}/edit`);
+  redirect(`/dashboard/forms/${id}/edit`);
 }

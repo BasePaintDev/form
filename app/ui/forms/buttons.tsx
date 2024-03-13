@@ -13,6 +13,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import {
+  editForm,
   deleteForm,
   deleteFormVersion,
   proposeFormVersion,
@@ -36,14 +37,14 @@ export function CreateForm() {
 }
 
 export function EditForm({ id }: { id: string }) {
+  const editFormWithId = editForm.bind(null, id);
   return (
-    <Link
-      href={`/dashboard/forms/${id}/edit`}
-      className="rounded-md border p-2 hover:bg-gray-100"
-    >
-      <span className="sr-only">Edit Form</span>
-      <PencilIcon className="w-5" />
-    </Link>
+    <form action={editFormWithId}>
+      <button className="rounded-md border p-2 hover:bg-gray-100">
+        <span className="sr-only">Edit</span>
+        <PencilIcon className="w-5" />
+      </button>
+    </form>
   );
 }
 

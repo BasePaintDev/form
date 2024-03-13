@@ -93,7 +93,7 @@ export default async function Table({
                       <PreviewFormVersion id={version.id} />
                       {version.status != 'draft' && (
                         <ViewFormVersion id={version.id} />
-                      )}{' '}
+                      )}
                       {version.status == 'draft' && <EditForm id={formId} />}
                       <p>{version.version}</p>
                     </div>
