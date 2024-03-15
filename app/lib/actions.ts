@@ -161,12 +161,23 @@ export async function approveFormVersion(form: FormVersion) {
     await prisma.form.update({
       where: { id: form.formId },
       data: {
+        currentVersionId: form.id,
         versions: {
           update: {
             where: { id: form.id },
             data: { status: 'published' },
           },
         },
+      },
+    });
+    await prisma.formVersion.updateMany({
+      where: {
+        formId: form.formId,
+        id: { not: form.id },
+        status: 'published',
+      },
+      data: {
+        status: 'archived',
       },
     });
     revalidatePath('/dashboard/forms');
@@ -203,6 +214,7 @@ export async function archiveFormVersion(form: FormVersion) {
     await prisma.form.update({
       where: { id: form.formId },
       data: {
+        currentVersionId: null,
         versions: {
           update: {
             where: { id: form.id },
@@ -211,6 +223,7 @@ export async function archiveFormVersion(form: FormVersion) {
         },
       },
     });
+
     revalidatePath('/dashboard/forms');
     return { message: 'Form Approved' };
   } catch (error) {
@@ -223,12 +236,23 @@ export async function revertFormVersion(form: FormVersion) {
     await prisma.form.update({
       where: { id: form.formId },
       data: {
+        currentVersionId: form.id,
         versions: {
           update: {
             where: { id: form.id },
             data: { status: 'published' },
           },
         },
+      },
+    });
+    await prisma.formVersion.updateMany({
+      where: {
+        formId: form.formId,
+        id: { not: form.id },
+        status: 'published',
+      },
+      data: {
+        status: 'archived',
       },
     });
     revalidatePath('/dashboard/forms');
