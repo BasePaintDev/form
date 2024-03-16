@@ -91,10 +91,7 @@ export default async function Table({
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
                       <PreviewFormVersion id={version.id} />
-                      {version.status != 'draft' && (
-                        <ViewFormVersion id={version.id} />
-                      )}
-                      {version.status == 'draft' && <EditForm id={formId} />}
+                      <ViewFormVersion id={version.id} />
                       <p>{version.version}</p>
                     </div>
                   </td>
@@ -108,16 +105,17 @@ export default async function Table({
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
+                      {version.status === 'draft' && (
+                        <>
+                          <EditForm id={formId} />
+                          <ProposeFormVersion form={version} />
+                          <DeleteFormVersion id={version.id} />
+                        </>
+                      )}
                       {version.status === 'pending' && (
                         <>
                           <ApproveFormVersion form={version} />
                           <DeclineFormVersion form={version} />
-                        </>
-                      )}
-                      {version.status === 'draft' && (
-                        <>
-                          <ProposeFormVersion form={version} />
-                          <DeleteFormVersion id={version.id} />
                         </>
                       )}
                       {version.status === 'published' && (
