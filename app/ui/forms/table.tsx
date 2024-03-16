@@ -111,7 +111,6 @@ export default async function Table({
                       {version.status === 'pending' && (
                         <>
                           <ApproveFormVersion form={version} />
-
                           <DeclineFormVersion form={version} />
                         </>
                       )}
