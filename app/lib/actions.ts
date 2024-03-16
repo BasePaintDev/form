@@ -340,8 +340,9 @@ export async function editForm(id: string) {
         },
       });
     } else if (draft?.status === 'pending') {
+      console.log('pending running...');
       await prisma.formVersion.update({
-        where: { id: id },
+        where: { id: draft.id },
         data: {
           status: 'draft',
         },
