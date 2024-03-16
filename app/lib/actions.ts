@@ -52,6 +52,22 @@ const CreateField = FieldSchema.omit({
   updatedAt: true,
 });
 
+function createNewVersion(
+  currentVersion: string,
+  versionLevel: 'major' | 'minor' | 'patch',
+) {
+  const [major, minor, patch] = currentVersion.split('.').map(Number);
+
+  switch (versionLevel) {
+    case 'major':
+      return `${major + 1}.0.0`;
+    case 'minor':
+      return `${major}.${minor + 1}.0`;
+    case 'patch':
+      return `${major}.${minor}.${patch + 1}`;
+  }
+}
+
 export async function createForm(prevState: State, formData: FormData) {
   let rawFormData = Object.fromEntries(formData);
   const validatedFormData = CreateForm.safeParse(rawFormData);
@@ -265,6 +281,17 @@ export async function revertFormVersion(form: FormVersion) {
 
 export async function editForm(id: string) {
   try {
+    let latestVersion = await prisma.formVersion.findFirst({
+      where: {
+        formId: id,
+        NOT: {
+          status: 'draft' || 'pending',
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
     let draft = await prisma.formVersion.findFirst({
       where: {
         formId: id,
@@ -281,10 +308,10 @@ export async function editForm(id: string) {
         form: true,
       },
     });
-    if (!draft) {
+    if (!latestVersion && !draft) {
       draft = await prisma.formVersion.create({
         data: {
-          version: '0.0.0001',
+          version: '1.0.0',
           status: 'draft',
           form: {
             connect: {
@@ -296,16 +323,27 @@ export async function editForm(id: string) {
           form: true,
         },
       });
-    } else if (draft.status === 'pending') {
-      draft = await prisma.formVersion.update({
-        where: {
-          id: draft.id,
-        },
+    } else if (latestVersion && !draft) {
+      const newVersion = createNewVersion(latestVersion.version, 'minor');
+      draft = await prisma.formVersion.create({
         data: {
+          version: newVersion,
           status: 'draft',
+          form: {
+            connect: {
+              id: id,
+            },
+          },
         },
         include: {
           form: true,
+        },
+      });
+    } else if (draft?.status === 'pending') {
+      await prisma.formVersion.update({
+        where: { id: id },
+        data: {
+          status: 'draft',
         },
       });
     }
