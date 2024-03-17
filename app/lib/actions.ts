@@ -284,9 +284,7 @@ export async function editForm(id: string) {
     let latestVersion = await prisma.formVersion.findFirst({
       where: {
         formId: id,
-        NOT: {
-          status: 'draft' || 'pending',
-        },
+        status: 'archived' || 'published',
       },
       orderBy: {
         createdAt: 'desc',
