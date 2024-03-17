@@ -14,7 +14,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           { label: 'Form', href: '/dashboard/forms' },
           {
             label: 'Edit Form',
-            href: `/dashboard/form/${id}/edit`,
+            href: `/dashboard/forms/${id}/edit`,
             active: true,
           },
         ]}

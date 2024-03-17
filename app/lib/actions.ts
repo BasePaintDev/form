@@ -125,8 +125,8 @@ export async function updateForm(prevState: State, formData: FormData) {
     };
     return state;
   }
-  revalidatePath('/dashboard/forms');
-  redirect('/dashboard/forms');
+  revalidatePath(`/dashboard/forms/${formId}`);
+  redirect(`/dashboard/forms/${formId}`);
 }
 
 export async function deleteForm(id: string) {
@@ -338,7 +338,6 @@ export async function editForm(id: string) {
         },
       });
     } else if (draft?.status === 'pending') {
-      console.log('pending running...');
       await prisma.formVersion.update({
         where: { id: draft.id },
         data: {

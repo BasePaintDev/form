@@ -20,7 +20,10 @@ export async function fetchForms() {
     throw new Error('Failed to fetch form data.');
   }
 }
-export async function fetchFormById(id: string) {
+
+const VERSIONS_PER_PAGE = 5;
+export async function fetchFormById(id: string, currentPage: number) {
+  const offset = (currentPage - 1) * VERSIONS_PER_PAGE;
   try {
     const form = await prisma.form.findUnique({
       where: {
@@ -31,10 +34,26 @@ export async function fetchFormById(id: string) {
           orderBy: {
             createdAt: 'desc',
           },
+          skip: offset,
+          take: VERSIONS_PER_PAGE,
         },
       },
     });
     return form;
+  } catch (error) {
+    console.error('Database Error: Failed to fetch form');
+    throw new Error('Failed to fetch form data.');
+  }
+}
+
+export async function fetchVersionCount(id: string) {
+  try {
+    const formCount = await prisma.formVersion.count({
+      where: {
+        formId: id,
+      },
+    });
+    return Math.ceil(formCount / VERSIONS_PER_PAGE);
   } catch (error) {
     console.error('Database Error: Failed to fetch form');
     throw new Error('Failed to fetch form data.');

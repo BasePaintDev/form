@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import FormStatus from '@/app/ui/forms/status';
 import { formatDateToLocal } from '@/app/lib/utils';
 import { ClipboardDocumentListIcon } from '@heroicons/react/24/outline';
@@ -60,7 +61,12 @@ export default async function Table({
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  {title}
+                  <Link
+                    href={`/dashboard/forms/${formId}`}
+                    className={'text-blue-600 hover:underline'}
+                  >
+                    {title}
+                  </Link>
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Approved By
