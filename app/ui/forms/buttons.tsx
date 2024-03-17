@@ -8,7 +8,6 @@ import {
   ArchiveBoxArrowDownIcon,
   ArrowUturnUpIcon,
   ClipboardDocumentListIcon,
-  ArrowDownTrayIcon,
   ShieldCheckIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
@@ -105,10 +104,20 @@ export function DeclineFormVersion({ form }: { form: FormVersion }) {
   );
 }
 export function ViewFormVersion({ id }: { id: string }) {
-  return null;
+  return (
+    <button type="button" className="rounded-md border p-2 hover:bg-gray-100">
+      <span className="sr-only">View</span>
+      <EyeIcon className="w-5" />
+    </button>
+  );
 }
 export function PreviewFormVersion({ id }: { id: string }) {
-  return null;
+  return (
+    <button type="button" className="rounded-md border p-2 hover:bg-gray-100">
+      <span className="sr-only">Preview</span>
+      <ClipboardDocumentListIcon className="w-5" />
+    </button>
+  );
 }
 export function ArchiveFormVersion({ form }: { form: FormVersion }) {
   const archiveFormWithId = archiveFormVersion.bind(null, form);

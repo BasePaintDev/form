@@ -1,7 +1,7 @@
 import FormStatus from '@/app/ui/forms/status';
 import { formatDateToLocal } from '@/app/lib/utils';
 import { ClipboardDocumentListIcon } from '@heroicons/react/24/outline';
-import type { Form, FormVersion } from '@prisma/client';
+import type { FormVersion } from '@prisma/client';
 import {
   EditForm,
   DeleteForm,
