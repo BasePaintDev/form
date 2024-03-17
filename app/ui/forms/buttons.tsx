@@ -105,26 +105,10 @@ export function DeclineFormVersion({ form }: { form: FormVersion }) {
   );
 }
 export function ViewFormVersion({ id }: { id: string }) {
-  const deleteFormWithId = deleteForm.bind(null, id);
-  return (
-    <form action={deleteFormWithId}>
-      <button className="rounded-md border p-2 hover:bg-gray-100">
-        <span className="sr-only">View</span>
-        <EyeIcon className="w-5" />
-      </button>
-    </form>
-  );
+  return null;
 }
 export function PreviewFormVersion({ id }: { id: string }) {
-  const deleteFormWithId = deleteFormVersion.bind(null, id);
-  return (
-    <form action={deleteFormWithId}>
-      <button className="rounded-md border p-2 hover:bg-gray-100">
-        <span className="sr-only">View</span>
-        <ClipboardDocumentListIcon className="w-5" />
-      </button>
-    </form>
-  );
+  return null;
 }
 export function ArchiveFormVersion({ form }: { form: FormVersion }) {
   const archiveFormWithId = archiveFormVersion.bind(null, form);
