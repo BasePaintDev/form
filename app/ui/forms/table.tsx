@@ -107,7 +107,6 @@ export default async function Table({
                     <div className="flex justify-end gap-3">
                       {version.status === 'draft' && (
                         <>
-                          <EditForm id={formId} />
                           <ProposeFormVersion form={version} />
                           <DeleteFormVersion id={version.id} />
                         </>
