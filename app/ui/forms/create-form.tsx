@@ -1,13 +1,5 @@
 'use client';
 import Link from 'next/link';
-import {
-  ArchiveBoxIcon,
-  CheckIcon,
-  ClockIcon,
-  CurrencyDollarIcon,
-  DocumentIcon,
-  UserCircleIcon,
-} from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { createForm } from '@/app/lib/actions';
 import { useFormState } from 'react-dom';
