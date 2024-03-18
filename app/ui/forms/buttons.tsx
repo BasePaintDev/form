@@ -143,10 +143,13 @@ export function ViewFormVersion({ id }: { id: string }) {
 }
 export function PreviewFormVersion({ id }: { id: string }) {
   return (
-    <button type="button" className="rounded-md border p-2 hover:bg-gray-100">
+    <Link
+      href={`/forms/${id}`}
+      className="rounded-md border p-2 hover:bg-gray-100"
+    >
       <span className="sr-only">Preview</span>
       <ClipboardDocumentListIcon className="w-5" />
-    </button>
+    </Link>
   );
 }
 export function ArchiveFormVersion({ form }: { form: FormVersion }) {
