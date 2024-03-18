@@ -41,7 +41,7 @@ const FieldSchema = z.object({
   id: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
-  name: z.string(),
+  label: z.string(),
   type: z.enum(['text', 'email', 'password', 'number', 'date', 'textarea']),
   formId: z.string(),
 });
@@ -50,6 +50,12 @@ const CreateField = FieldSchema.omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+});
+
+const UpdateField = FieldSchema.omit({
+  createdAt: true,
+  updatedAt: true,
+  formId: true,
 });
 
 function createNewVersion(
@@ -129,8 +135,68 @@ export async function createForm(prevState: State, formData: FormData) {
   redirect(`/dashboard/forms/${form.id}/edit`);
 }
 
+// Example call to updateForm
+// FormData {
+//   [Symbol(state)]: [
+//     { name: 'formId', value: 'b8e9a1e5-68fd-464a-a624-30b3a3ffcb66' },
+//     {
+//       name: 'formVersionId',
+//       value: 'd728ab88-6ec7-4867-ae9a-f944dd89e80e'
+//     },
+//     { name: 'title', value: 'Form' },
+//     {
+//       name: 'label-18d1bbc1-033a-4fa5-b961-3349af425bbd',
+//       value: 'Bah'
+//     },
+//     {
+//       name: 'type-18d1bbc1-033a-4fa5-b961-3349af425bbd',
+//       value: 'text'
+//     }
+//   ]
+// }
+
 export async function updateForm(prevState: State, formData: FormData) {
   let rawFormData = Object.fromEntries(formData);
+  let rawFieldData = [];
+  for (const [key, value] of Object.entries(rawFormData)) {
+    if (key.startsWith('label-') || key.startsWith('type-')) {
+      const fieldId = key.substring(key.indexOf('-') + 1);
+      let field: any = rawFieldData.find((field) => field.id === fieldId);
+      if (!field) {
+        field = { id: fieldId };
+        rawFieldData.push(field);
+      }
+      field[key.startsWith('label-') ? 'label' : 'type'] = value;
+    }
+  }
+  console.log(rawFieldData);
+
+  const promises = rawFieldData.map(async (fieldData) => {
+    const validatedFieldData = UpdateField.safeParse(fieldData);
+    console.log(validatedFieldData.success);
+    if (!validatedFieldData.success) {
+      const state: State = {
+        errors: validatedFieldData.error.flatten().fieldErrors,
+        message: 'Missing or invalid form data',
+      };
+      return state;
+    }
+    const { id, label, type } = validatedFieldData.data;
+    try {
+      const field = await prisma.field.update({
+        where: { id: id },
+        data: {
+          label: label,
+          type: type,
+        },
+      });
+      console.log(field);
+    } catch (error) {
+      console.error('Database Error: Failed to update field', error);
+      return { message: 'Database Error: Failed to update field' };
+    }
+  });
+  await Promise.all(promises);
   const validatedFormData = UpdateForm.safeParse(rawFormData);
   if (!validatedFormData.success) {
     const state: State = {
@@ -159,8 +225,8 @@ export async function updateForm(prevState: State, formData: FormData) {
     };
     return state;
   }
-  revalidatePath(`/dashboard/forms/${formId}`);
-  redirect(`/dashboard/forms/${formId}`);
+  revalidatePath(`/dashboard/forms/${formId}/edit`);
+  redirect(`/dashboard/forms/${formId}/edit`);
 }
 
 export async function deleteForm(id: string) {
