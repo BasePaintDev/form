@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 import { Metadata } from 'next';
 import Table from '@/app/ui/forms/table';
-import { lusitana } from '@/app/ui/fonts';
 import { FormTableSkeleton } from '@/app/ui/skeletons';
 import { CreateForm } from '@/app/ui/forms/buttons';
 import Search from '@/app/ui/search';
