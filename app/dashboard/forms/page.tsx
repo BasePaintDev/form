@@ -22,7 +22,7 @@ export default async function Page({
 }) {
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
-  const forms = await fetchFilteredForms(currentPage);
+  const forms = await fetchFilteredForms(query, currentPage);
   const totalPages = await fetchFilteredFormsCount();
 
   return (

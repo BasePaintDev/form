@@ -78,17 +78,29 @@ export async function fetchEditForm(id: string) {
   }
 }
 
-const ITEMS_PER_PAGE = 2;
-export async function fetchFilteredForms(currentPage: number) {
+const ITEMS_PER_PAGE = 5;
+export async function fetchFilteredForms(query: string, currentPage: number) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
   try {
     const forms = await prisma.form.findMany({
+      where: {
+        title: {
+          contains: query,
+          mode: 'insensitive',
+        },
+      },
       include: {
         versions: {
+          where: {
+            OR: [
+              { status: 'published' },
+              { status: 'draft' },
+              { status: 'pending' },
+            ],
+          },
           orderBy: {
             createdAt: 'desc',
           },
-          take: 3,
         },
       },
       orderBy: { title: 'asc' },
