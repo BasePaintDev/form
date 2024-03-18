@@ -68,6 +68,38 @@ function createNewVersion(
   }
 }
 
+export async function createField(id: string) {
+  try {
+    const field = await prisma.field.create({
+      data: {
+        label: 'New Field',
+        type: 'text',
+        form: {
+          connect: {
+            id: id,
+          },
+        },
+      },
+    });
+  } catch (error) {
+    console.error('Database Error: Failed to create field', error);
+    return { message: 'Database Error: Failed to create field' };
+  }
+  revalidatePath(`/dashboard/forms/${id}/edit`);
+}
+
+export async function deleteField(id: string) {
+  try {
+    const field = await prisma.field.delete({
+      where: { id: id },
+    });
+  } catch (error) {
+    console.error('Database Error: Failed to create field', error);
+    return { message: 'Database Error: Failed to create field' };
+  }
+  revalidatePath(`/dashboard/forms/${id}/edit`);
+}
+
 export async function createForm(prevState: State, formData: FormData) {
   let rawFormData = Object.fromEntries(formData);
   const validatedFormData = CreateForm.safeParse(rawFormData);

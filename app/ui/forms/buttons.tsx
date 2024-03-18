@@ -14,6 +14,8 @@ import Link from 'next/link';
 import {
   editForm,
   deleteForm,
+  createField,
+  deleteField,
   deleteFormVersion,
   proposeFormVersion,
   approveFormVersion,
@@ -22,6 +24,7 @@ import {
   revertFormVersion,
 } from '@/app/lib/actions';
 import type { FormVersion } from '@prisma/client';
+import { Bars2Icon } from '@heroicons/react/16/solid';
 
 export function CreateForm() {
   return (
@@ -44,6 +47,33 @@ export function EditForm({ id }: { id: string }) {
         <PencilIcon className="w-5" />
       </button>
     </form>
+  );
+}
+
+export function CreateField({ id }: { id: string }) {
+  const createFieldWithId = createField.bind(null, id);
+  return (
+    <form
+      action={createFieldWithId}
+      className="rounded border border-black bg-gray-100 px-2 text-left"
+    >
+      <button type="submit" className="flex items-center">
+        <Bars2Icon className="mr-2 inline-block h-4 w-4" /> Short Answer
+      </button>
+    </form>
+  );
+}
+
+export function DeleteField({ id }: { id: string }) {
+  const deleteFieldWithId = deleteField.bind(null, id);
+  return (
+    <button
+      className="rounded-md border bg-gray-100 p-2 hover:bg-gray-50"
+      formAction={deleteFieldWithId}
+    >
+      <span className="sr-only">Delete</span>
+      <TrashIcon className="w-5" />
+    </button>
   );
 }
 

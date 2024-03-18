@@ -69,6 +69,7 @@ export async function fetchEditForm(id: string) {
       },
       include: {
         form: true,
+        fields: true,
       },
     });
     return draft;
