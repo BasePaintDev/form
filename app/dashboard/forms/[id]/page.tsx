@@ -39,7 +39,7 @@ export default async function Page({
     <div className="w-full">
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Form', href: '/dashboard/forms' },
+          { label: 'Forms', href: '/dashboard/forms' },
           {
             label: 'View Form',
             href: `/dashboard/forms/${params.id}`,

@@ -79,8 +79,9 @@ export async function createForm(prevState: State, formData: FormData) {
     return state;
   }
   const { title } = validatedFormData.data;
+  let form;
   try {
-    await prisma.form.create({
+    form = await prisma.form.create({
       data: {
         title: title,
       },
@@ -91,8 +92,9 @@ export async function createForm(prevState: State, formData: FormData) {
     };
     return state;
   }
-  revalidatePath('/dashboard/forms');
-  return { message: 'Form created successfully' };
+  await editForm(form.id);
+  revalidatePath(`/dashboard/forms/${form.id}/edit`);
+  redirect(`/dashboard/forms/${form.id}/edit`);
 }
 
 export async function updateForm(prevState: State, formData: FormData) {
@@ -132,23 +134,23 @@ export async function updateForm(prevState: State, formData: FormData) {
 export async function deleteForm(id: string) {
   try {
     await prisma.form.delete({ where: { id: id } });
-    revalidatePath('/dashboard/forms');
-    return { message: 'Form deleted' };
   } catch (error) {
     console.error('Database Error: Failed to delete form', error);
     return { message: 'Database Error: Failed to Delete' };
   }
+  revalidatePath('/dashboard/forms');
+  redirect('/dashboard/forms');
 }
 
 export async function deleteFormVersion(id: string) {
   try {
     await prisma.formVersion.delete({ where: { id: id } });
-    revalidatePath('/dashboard/forms');
-    return { message: 'Form deleted' };
   } catch (error) {
     console.error('Database Error: Failed to delete form', error);
     return { message: 'Database Error: Failed to Delete' };
   }
+  revalidatePath('/dashboard/forms');
+  redirect('/dashboard/forms');
 }
 
 export async function declineFormVersion(form: FormVersion) {
@@ -164,12 +166,12 @@ export async function declineFormVersion(form: FormVersion) {
         },
       },
     });
-    revalidatePath('/dashboard/forms');
-    return { message: 'Form Declined' };
   } catch (error) {
     console.error('Database Error: Failed to decline form', error);
     return { message: 'Database Error: Failed to Decline' };
   }
+  revalidatePath('/dashboard/forms');
+  redirect('/dashboard/forms');
 }
 
 export async function approveFormVersion(form: FormVersion) {
@@ -196,12 +198,12 @@ export async function approveFormVersion(form: FormVersion) {
         status: 'archived',
       },
     });
-    revalidatePath('/dashboard/forms');
-    return { message: 'Form Approved' };
   } catch (error) {
     console.error('Database Error: Failed to approve form', error);
     return { message: 'Database Error: Failed to Approve' };
   }
+  revalidatePath('/dashboard/forms');
+  redirect('/dashboard/forms');
 }
 
 export async function proposeFormVersion(form: FormVersion) {
@@ -217,12 +219,12 @@ export async function proposeFormVersion(form: FormVersion) {
         },
       },
     });
-    revalidatePath('/dashboard/forms');
-    return { message: 'Form Proposed' };
   } catch (error) {
     console.error('Database Error: Failed to propose form', error);
     return { message: 'Database Error: Failed to Propose' };
   }
+  revalidatePath('/dashboard/forms');
+  redirect('/dashboard/forms');
 }
 
 export async function archiveFormVersion(form: FormVersion) {
@@ -271,12 +273,12 @@ export async function revertFormVersion(form: FormVersion) {
         status: 'archived',
       },
     });
-    revalidatePath('/dashboard/forms');
-    return { message: 'Form Reverted' };
   } catch (error) {
     console.error('Database Error: Failed to revert form', error);
     return { message: 'Database Error: Failed to Revert' };
   }
+  revalidatePath('/dashboard/forms');
+  redirect('/dashboard/forms');
 }
 
 export async function editForm(id: string) {
