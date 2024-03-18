@@ -169,11 +169,9 @@ export async function updateForm(prevState: State, formData: FormData) {
       field[key.startsWith('label-') ? 'label' : 'type'] = value;
     }
   }
-  console.log(rawFieldData);
 
   const promises = rawFieldData.map(async (fieldData) => {
     const validatedFieldData = UpdateField.safeParse(fieldData);
-    console.log(validatedFieldData.success);
     if (!validatedFieldData.success) {
       const state: State = {
         errors: validatedFieldData.error.flatten().fieldErrors,
@@ -190,7 +188,6 @@ export async function updateForm(prevState: State, formData: FormData) {
           type: type,
         },
       });
-      console.log(field);
     } catch (error) {
       console.error('Database Error: Failed to update field', error);
       return { message: 'Database Error: Failed to update field' };
