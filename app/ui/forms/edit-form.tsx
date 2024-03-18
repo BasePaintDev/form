@@ -5,14 +5,14 @@ import { updateForm } from '@/app/lib/actions';
 import { useFormState } from 'react-dom';
 import { redirect } from 'next/navigation';
 import type { Form, FormVersion } from '@prisma/client';
-import { unstable_noStore } from 'next/cache';
+import { unstable_noStore as noStore } from 'next/cache';
 
 type Draft = {
   form: Form;
 } & FormVersion;
 
 export default function Form({ draft }: { draft: Draft }) {
-  unstable_noStore();
+  noStore();
   const initialState = { message: null, errors: {} };
   const [state, dispatch] = useFormState(updateForm, initialState);
   if (state?.message == 'Form updated successfully')
@@ -37,7 +37,7 @@ export default function Form({ draft }: { draft: Draft }) {
             </div>
           </div>
         </div>
-        {/* Form Id */}
+        {/* Form Version Id */}
         <div className="mb-4 hidden">
           <div className="relative mt-2 rounded-md">
             <div className="relative">
