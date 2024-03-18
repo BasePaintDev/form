@@ -135,26 +135,6 @@ export async function createForm(prevState: State, formData: FormData) {
   redirect(`/dashboard/forms/${form.id}/edit`);
 }
 
-// Example call to updateForm
-// FormData {
-//   [Symbol(state)]: [
-//     { name: 'formId', value: 'b8e9a1e5-68fd-464a-a624-30b3a3ffcb66' },
-//     {
-//       name: 'formVersionId',
-//       value: 'd728ab88-6ec7-4867-ae9a-f944dd89e80e'
-//     },
-//     { name: 'title', value: 'Form' },
-//     {
-//       name: 'label-18d1bbc1-033a-4fa5-b961-3349af425bbd',
-//       value: 'Bah'
-//     },
-//     {
-//       name: 'type-18d1bbc1-033a-4fa5-b961-3349af425bbd',
-//       value: 'text'
-//     }
-//   ]
-// }
-
 export async function updateForm(prevState: State, formData: FormData) {
   let rawFormData = Object.fromEntries(formData);
   let rawFieldData = [];
