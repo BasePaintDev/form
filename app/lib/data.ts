@@ -46,6 +46,24 @@ export async function fetchFormById(id: string, currentPage: number) {
   }
 }
 
+export async function fetchFormVersionById(id: string) {
+  try {
+    const form = await prisma.formVersion.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        form: true,
+        fields: true,
+      },
+    });
+    return form;
+  } catch (error) {
+    console.error('Database Error: Failed to fetch form');
+    throw new Error('Failed to fetch form data.');
+  }
+}
+
 export async function fetchVersionCount(id: string) {
   try {
     const formCount = await prisma.formVersion.count({
